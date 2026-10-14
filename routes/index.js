@@ -7,7 +7,7 @@ router.get('/', function(req, res, next) {
 });
 
 /* Страница Audi A7 */
-router.get('/Audi A7', function(req, res, next) {
+router.get('/audi-a7', function(req, res, next) {
   res.render('car', {
     title: "Audi A7",
     picture: "/images/audi_a7.webp",
@@ -16,7 +16,7 @@ router.get('/Audi A7', function(req, res, next) {
 });
 
 /* Страница Audi A6 */
-router.get('/Audi A6', function(req, res, next) {
+router.get('/audi-a6', function(req, res, next) {
   res.render('car', {
     title: "Audi A6",
     picture: "/images/audi_a6.webp",
@@ -25,7 +25,7 @@ router.get('/Audi A6', function(req, res, next) {
 });
 
 /* Страница Audi A5 */
-router.get('/Audi A5', function(req, res, next) {
+router.get('/audi-a5', function(req, res, next) {
   res.render('car', {
     title: "Audi A5",
     picture: "/images/audi_a5.webp",
