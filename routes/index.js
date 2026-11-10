@@ -1,40 +1,53 @@
 var express = require('express');
 var router = express.Router();
-
-
-
+// Импортируем нашу функцию для получения базы
+const { getDB } = require('../db'); 
 
 /* GET home page. */
 router.get('/', function(req, res, next) {
   res.render('index', { title: 'Express' });
 });
 
-
-/* Страница Audi A7 */
-router.get('/audi-a7', function(req, res, next) {
-  res.render('car', {
-    title: "Audi A7",
-    picture: "/images/audi_a7.webp",
-    desc: "Спортивный седан бизнес-класса. Мощный двигатель, элегантный дизайн, полный привод. Идеальна для динамичной езды и комфортных путешествий."
-  });
+// --- НОВОЕ ИЗ ПУНКТА 9.2 ---
+// Тестовый маршрут для проверки сессий. 
+// ВАЖНО: он должен быть ДО маршрута /:id !
+router.get('/test-session', function(req, res, next) {
+  if (req.session.views) {
+    req.session.views++;
+  } else {
+    req.session.views = 1;
+  }
+  res.send(`Вы посетили эту страницу ${req.session.views} раз(а).`);
 });
+// ---------------------------
 
-/* Страница Audi A6 */
-router.get('/audi-a6', function(req, res, next) {
-  res.render('car', {
-    title: "Audi A6",
-    picture: "/images/audi_a6.webp",
-    desc: "Классический бизнес-седан. Сочетает комфорт, технологии и управляемость. Отличный выбор для города и трассы."
-  });
-});
+/* ДИНАМИЧЕСКИЙ МАРШРУТ (чистый код) */
+router.get('/:id', async function(req, res, next) {
+  var carId = req.params.id; 
 
-/* Страница Audi A5 */
-router.get('/audi-a5', function(req, res, next) {
-  res.render('car', {
-    title: "Audi A5",
-    picture: "/images/audi_a5.webp",
-    desc: "Спортивное купе с элегантным силуэтом. Динамичная, стильная и технологичная. Для тех, кто ценит драйв и внешний вид."
-  });
+  try {
+    // Берем УЖЕ подключенную базу
+    const db = getDB();
+    const collection = db.collection('cars'); 
+
+    // Ищем машину
+    const car = await collection.findOne({ id: carId }); 
+
+    if (!car) {
+      return res.status(404).send('Машина не найдена в базе');
+    }
+
+    // Передаем в шаблон
+    res.render('car', {
+      title: car.title,
+      picture: car.picture,
+      desc: car.desc
+    });
+
+  } catch (error) {
+    console.error(error);
+    res.status(500).send('Ошибка сервера');
+  }
 });
 
 module.exports = router;
