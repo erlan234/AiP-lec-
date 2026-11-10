@@ -9,11 +9,11 @@ const connectDB = async () => {
     try {
         await client.connect();
         console.log('Успешно подключено к MongoDB');
-        return client.db(dbName);
+        return client.db(dbName); 
     } catch (error) {
         console.error('Ошибка подключения:', error);
+        throw error; 
     }
 };
 
-// Обязательно экспортируем её!
 module.exports = connectDB;
