@@ -34,15 +34,20 @@ app.use(session({
   }
 }));
 
-// --- НОВОЕ (Пункт 9.4): Глобальный счетчик посещений ---
+// --- НОВОЕ: Счетчик и глобальные переменные (Пункты 9.4 и 9.5) ---
 app.use(function(req, res, next) {
+  // 1. Счетчик посещений (9.4)
   if (req.session.views) {
     req.session.views++;
   } else {
     req.session.views = 1;
   }
-  // Делаем переменную views доступной во всех шаблонах EJS
   res.locals.views = req.session.views;
+
+  // 2. Глобальная переменная для навигации (9.5)
+  // Именно эта строка решает ошибку "currentPath is not defined"
+  res.locals.currentPath = req.path; 
+
   next();
 });
 // -------------------------------------------------------
